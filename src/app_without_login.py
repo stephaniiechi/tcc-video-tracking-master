@@ -11,6 +11,7 @@ from marker_detection_settings import CUBE_DETECTION, SINGLE_DETECTION, SingleMa
 import video_device_listing
 
 class AppWithoutLogin():
+
     def __init__(self, start_tracking, stop_tracking, window):
         self.start_tracking_event = start_tracking
         self.stop_tracking_event = stop_tracking
@@ -496,8 +497,6 @@ class AppWithoutLogin():
                                     justify="left", font=("Arial", 11),)
             error_message.grid(row=1, column=1)
 
-
-
     def marker_cube_settings_selection(self):
         if self.marker_cube_mode.get():
             self.single_marker_mode.set(False)
@@ -768,6 +767,7 @@ class AppWithoutLogin():
             self.calibration_selected()
         else:
             self.calibration_selection.set("")
+    
     def calibration_selected(self, _=None):
         if self.calibration_selection.get() in os.listdir(self.base_video_source_dir):
             self.calibration_config = VideoSourceCalibrationConfig.persisted(
@@ -790,7 +790,6 @@ class AppWithoutLogin():
             #     if calibration.to_dict().get('name', '') == self.calibration_selection.get():
             #         self.chessboard_square_size.set(calibration.to_dict().get('chessboard square size'))
             #         self.score_text.set('Score: {:.2f}'.format(calibration.to_dict().get('score')))
-
 
     def author_updated(self):
         self.calibration_selection.set('{}-{}-{}'.format(self.video_source.get(), 
@@ -972,6 +971,7 @@ class AppWithoutLogin():
         self.chessboard_square_size_entry['state'] = DISABLED
         self.calibrate_button.configure(text='Add calibration to database', command=self.add_calibration_to_database)
         self.test_button['state'] = ACTIVE
+    
     def save_camera_parameters(self):
         calibration_dir = self.get_calibration_dir()
         if os.path.exists(calibration_dir) and os.path.isfile("{}/cam_mtx.npy".format(calibration_dir)) and os.path.isfile("{}/dist.npy".format(calibration_dir)):
@@ -994,12 +994,15 @@ class AppWithoutLogin():
 
                     np.save('../assets/configs/selected_cam_mtx.npy', cam_mtx)
                     np.save('../assets/configs/selected_dist.npy', dist)
+    
     def get_video_source_dir(self):
         camera_identification = self.video_source.get().replace(" ", "_")
         return '{}/{}'.format(self.base_video_source_dir, camera_identification)
+    
     def get_calibration_dir(self):
         calibration_identification = self.calibration_selection.get()
         return '{}/{}'.format(self.base_video_source_dir, calibration_identification)
+    
     def save_tracking_config(self):
         self.tracking_config.device_number = self.video_source.current()
         self.tracking_config.device_calibration_dir = self.get_calibration_dir()
@@ -1043,9 +1046,11 @@ class AppWithoutLogin():
         offset_matrix[3][3] = 1
         self.tracking_config.translation_offset = offset_matrix
         self.tracking_config.persist()
+    
     def save_calibration_config(self, calibration_score):
         self.calibration_config.chessboard_square_size = self.chessboard_square_size.get()
         self.calibration_config.persist(self.get_calibration_dir(), calibration_score)
+    
     def create_about_window(self):
         about_window = tk.Toplevel()
         about_window.title("About")

@@ -4,6 +4,8 @@ import time
 from tracking import TrackingScheduler
 from app_without_login import AppWithoutLogin
 from login_interface import LoginInterface
+import xml.etree.ElementTree as ET
+
 
 FIREBASE_REST_API = "https://identitytoolkit.googleapis.com/v1/accounts"
     
@@ -18,8 +20,18 @@ if __name__ == "__main__":
     tracking_scheduler_process.start()
 
     tk_root = tk.Tk()
-    #AppWithoutLogin(start_tracking_event, stop_tracking_event, tk_root)
-    LoginInterface(start_tracking_event, stop_tracking_event, tk_root)
+
+    # Get configs from XML file
+    config = ET.parse('config.xml')
+    login_option = config.getroot()
+    value = login_option.attrib['value']
+
+    if value.lower() == "true":
+        LoginInterface(start_tracking_event, stop_tracking_event, tk_root)
+    else:
+        print("without")
+        AppWithoutLogin(start_tracking_event, stop_tracking_event, tk_root)
+
     tk_root.mainloop()
 
     stop_tracking_event.set()
