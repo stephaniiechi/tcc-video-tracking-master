@@ -1,0 +1,16 @@
+	# IDE - VSCode
+**vscode/
+
+.venv/*
+
+src/main.spec
+src/build
+src/dist
+assets/camera_calibration_data
+assets/configs/
+src/__pycache__/
+video_device_listing/build/
+
+# images
+
+calibration_images/*.jgp
