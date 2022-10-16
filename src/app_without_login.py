@@ -5,6 +5,7 @@ from tkinter.constants import ACTIVE, DISABLED
 from pil import ImageTk, Image
 import socket
 import numpy as np
+import webbrowser
 from tracking import TrackingCofig
 from video_source_calibration import VideoSourceCalibration, VideoSourceCalibrationConfig
 from marker_detection_settings import CUBE_DETECTION, SINGLE_DETECTION, SingleMarkerDetectionSettings, MarkersCubeDetectionSettings, MarkerCubeMapping
@@ -37,6 +38,14 @@ class AppWithoutLogin():
         window.grid_rowconfigure(4, weight=1)
         window.grid_columnconfigure(1, weight=1)
 
+        self.menu_bar = tk.Menu(window)
+        self.menu_help = tk.Menu(self.menu_bar, tearoff=0)
+        self.menu_help.add_command(label='Manual', command=self.open_manual)
+        self.menu_help.add_command(label="About", command=self.create_about_window)
+        self.menu_bar.add_cascade(label="Help", menu=self.menu_help)
+
+        window.config(menu=self.menu_bar)
+
         self.tabControl = ttk.Notebook(window)
         tab1 = ttk.Frame(self.tabControl)
         tab2 = ttk.Frame(self.tabControl)
@@ -46,83 +55,59 @@ class AppWithoutLogin():
         self.tabControl.add(tab3, text="Tracking")
         self.tabControl.pack(fill="both")
 
-        self.video_source_frame = ttk.LabelFrame(
-            tab1, text="Video Source")
+        self.video_source_frame = ttk.LabelFrame(tab1, text="Video Source")
         self.video_source_frame.place(relx=0.5, rely=0.5, anchor='center')
         self.video_source_frame.grid_columnconfigure(1, weight=1)
-        self.refresh_video_sources_button = tk.Button(
-            self.video_source_frame, text="Refresh Devices")
+        self.refresh_video_sources_button = tk.Button(self.video_source_frame, text="Refresh Devices")
         self.refresh_video_sources_button['command'] = self.refresh_video_sources
         self.refresh_video_sources_button.grid(row=1, column=1, pady=5)
-        self.video_source = ttk.Combobox(
-            self.video_source_frame, state="readonly", height=4, width=40)
-        self.video_source.bind('<<ComboboxSelected>>', 
-                               self.refresh_calibrations)
+        self.video_source = ttk.Combobox(self.video_source_frame, state="readonly", height=4, width=40)
+        self.video_source.bind('<<ComboboxSelected>>', self.refresh_calibrations)
         self.video_source.grid(row=2, column=1, padx=5, pady=5)
-        self.video_source_calibration_frame = ttk.LabelFrame(
-            self.video_source_frame, text="Calibration")
-        self.video_source_calibration_frame.grid(
-            row=3, column=1, padx=5, pady=5)
-        self.calibration_selection_frame = tk.Frame(
-            self.video_source_calibration_frame)
-        self.calibration_selection_frame.grid(
-            row=1, column=1, padx=5, pady=5)
+        self.video_source_calibration_frame = ttk.LabelFrame(self.video_source_frame, text="Calibration")
+        self.video_source_calibration_frame.grid(row=3, column=1, padx=5, pady=5)
+        self.calibration_selection_frame = tk.Frame(self.video_source_calibration_frame)
+        self.calibration_selection_frame.grid(row=1, column=1, padx=5, pady=5)
         
-        self.author_label = tk.Label(
-            self.calibration_selection_frame, text='Author:')
+        self.author_label = tk.Label(self.calibration_selection_frame, text='Author:')
         self.author_label.grid(row=0, column=0)
         self.author = tk.StringVar()
         self.author.trace('w', lambda name, index, mode, var=self.author: self.author_updated())
-        self.author_entry = tk.Entry(
-            self.calibration_selection_frame, textvariable=self.author, width=55, state=DISABLED)
+        self.author_entry = tk.Entry(self.calibration_selection_frame, textvariable=self.author, width=55, state=DISABLED)
         self.author_entry.grid(row=0, column=1)
-        self.new_calibration_button = tk.Button(
-            self.calibration_selection_frame, text="New", command=self.add_calibration, width=6)
+        self.new_calibration_button = tk.Button(self.calibration_selection_frame, text="New", command=self.add_calibration, width=6)
         self.new_calibration_button.grid(row=0, column=2, padx=5)
         
-        self.calibration_label = tk.Label(
-            self.calibration_selection_frame, text='Name:')
+        self.calibration_label = tk.Label(self.calibration_selection_frame, text='Name:')
         self.calibration_label.grid(row=1, column=0)
 
-        self.calibration_selection = ttk.Combobox(
-            self.calibration_selection_frame, state="readonly", height=4, width=52)
-        self.calibration_selection.bind('<<ComboboxSelected>>',
-                                        self.calibration_selected)
+        self.calibration_selection = ttk.Combobox(self.calibration_selection_frame, state="readonly", height=4, width=52)
+        self.calibration_selection.bind('<<ComboboxSelected>>', self.calibration_selected)
         self.calibration_selection.grid(row=1, column=1)
         self.calibration_config = VideoSourceCalibrationConfig.persisted(self.get_calibration_dir())
         
         self.score_text = tk.StringVar()
         self.score_text.set('Score: {:.2f}'.format(self.calibration_config.score))
-        self.score_label = tk.Label(
-            self.calibration_selection_frame, textvariable=self.score_text)
+        self.score_label = tk.Label(self.calibration_selection_frame, textvariable=self.score_text)
         self.score_label.grid(row=1, column=2)
-        self.calibration_chessboard_parameters_frame = tk.Frame(
-            self.video_source_calibration_frame)
-        self.calibration_chessboard_parameters_frame.grid(
-            row=2, column=1, padx=5)
+        self.calibration_chessboard_parameters_frame = tk.Frame(self.video_source_calibration_frame)
+        self.calibration_chessboard_parameters_frame.grid(row=2, column=1, padx=5)
         self.chessboard_square_size = tk.DoubleVar()
-        self.chessboard_square_size.set(
-            self.calibration_config.chessboard_square_size)
-        self.chessboard_square_size_label = ttk.Label(
-            self.calibration_chessboard_parameters_frame, text="Chessboard square size:")
-        self.chessboard_square_size_label.grid(
-            row=1, column=1)
+        self.chessboard_square_size.set(self.calibration_config.chessboard_square_size)
+        self.chessboard_square_size_label = ttk.Label(self.calibration_chessboard_parameters_frame, text="Chessboard square size:")
+        self.chessboard_square_size_label.grid(row=1, column=1)
         self.chessboard_square_size_entry = ttk.Entry(
             self.calibration_chessboard_parameters_frame, width=5,
             textvariable=self.chessboard_square_size, state=DISABLED)
         self.chessboard_square_size_entry.grid(row=1, column=2)
-        self.calibration_buttons_frame = tk.Frame(
-            self.video_source_calibration_frame)
+        self.calibration_buttons_frame = tk.Frame(self.video_source_calibration_frame)
         self.calibration_buttons_frame.grid(row=3, column=1, pady=5)
-        self.calibrate_button = tk.Button(
-            self.calibration_buttons_frame, text="Add calibration to database", command=self.add_calibration_to_database, state=DISABLED)
+        self.calibrate_button = tk.Button(self.calibration_buttons_frame, text="Add calibration to database", command=self.add_calibration_to_database, state=DISABLED)
         self.calibrate_button.grid(row=1, column=1, padx=5)
-        self.test_button = tk.Button(
-            self.calibration_buttons_frame, text="Test calibration", command=self.enable_chessboard_entry, state=ACTIVE)
+        self.test_button = tk.Button(self.calibration_buttons_frame, text="Test calibration", command=self.enable_chessboard_entry, state=ACTIVE)
         self.test_button.grid(row=1, column=2, padx=5)
         
-        self.delete_button = tk.Button(
-            self.calibration_buttons_frame, text="Delete", command=self.delete_calibration, state=DISABLED)
+        self.delete_button = tk.Button(self.calibration_buttons_frame, text="Delete", command=self.delete_calibration, state=DISABLED)
         self.delete_button.grid(row=1, column=3, padx=5)
         self.configuration_frame = tk.Frame(tab2)
         self.configuration_frame.pack()
@@ -437,6 +422,9 @@ class AppWithoutLogin():
         self.calibration_selection_init()
         self.icon_img = ImageTk.PhotoImage(Image.open("{}/error_icon.png".format(self.base_img_dir)))
     
+    def open_manual(self):
+            webbrowser.open_new('https://docs.google.com/document/d/183dZg2_0UBD8IP1P4XLX4uSmWgOMQhZjNsOYzaSrt_M/edit')
+
     def single_marker_settings_selection(self):
         if self.single_marker_mode.get():
             self.marker_cube_mode.set(False)
