@@ -325,6 +325,7 @@ class AppWithoutLogin():
         self.cube_ids_init()
         self.video_source_list = []
         self.refresh_video_sources()
+        # ---- \/ Comentado para tirar erro no executável ----
         # self.video_source.current(self.tracking_config.device_number) #selects the last camera used by the AR Tracking
         self.calibration_selection_init()
         self.icon_img = ImageTk.PhotoImage(Image.open("{}/error_icon.png".format(self.base_img_dir)))
