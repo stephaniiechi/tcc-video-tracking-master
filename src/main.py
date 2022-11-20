@@ -4,8 +4,8 @@ import time
 from tracking import TrackingScheduler
 from app_without_login import AppWithoutLogin
 from login_interface import LoginInterface
+from main_menu import MainMenu
 import xml.etree.ElementTree as ET
-
 
 FIREBASE_REST_API = "https://identitytoolkit.googleapis.com/v1/accounts"
     
@@ -15,8 +15,7 @@ if __name__ == "__main__":
     start_tracking_event = multiprocessing.Event()
     stop_tracking_event = multiprocessing.Event()
 
-    tracking_scheduler_process = multiprocessing.Process(
-        target=TrackingScheduler(start_tracking_event, stop_tracking_event).main)
+    tracking_scheduler_process = multiprocessing.Process(target=TrackingScheduler(start_tracking_event, stop_tracking_event).main)
     tracking_scheduler_process.start()
 
     tk_root = tk.Tk()
@@ -27,10 +26,10 @@ if __name__ == "__main__":
     value = login_option.attrib['value']
 
     if value.lower() == "true":
-        LoginInterface(start_tracking_event, stop_tracking_event, tk_root)
+        LoginInterface(start_tracking_event, stop_tracking_event, tk_root) # Inside the class LoginInterface, it calls AppWithLogin
     else:
-        print("without")
-        AppWithoutLogin(start_tracking_event, stop_tracking_event, tk_root)
+        # AppWithoutLogin(start_tracking_event, stop_tracking_event, tk_root)
+        MainMenu(start_tracking_event, stop_tracking_event, tk_root)
 
     tk_root.mainloop()
 
