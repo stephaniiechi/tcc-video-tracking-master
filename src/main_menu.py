@@ -1,5 +1,5 @@
 import tkinter as tk
-from pil import ImageTk, Image
+from PIL import ImageTk, Image
 from app_without_login import AppWithoutLogin
 from app_with_login import AppWithLogin
 
@@ -8,6 +8,7 @@ class MainMenu():
         # para abrir o ar tracking
         self.start_tracking_event = start_tracking_event
         self.stop_tracking_event = stop_tracking_event
+        # com login
         self.login = login
         self.db = db
         self.userId = userId
@@ -20,7 +21,7 @@ class MainMenu():
         self.window.title('Menu')
 
         width = 350
-        height = 230
+        height = 310
         pos_x = (window.winfo_screenwidth()/2) - (width/2)
         pos_y = (window.winfo_screenheight()/2) - (height/2)
         window.geometry('%dx%d+%d+%d' % (width, height, pos_x, pos_y))
@@ -57,6 +58,15 @@ class MainMenu():
                                        command=self.open_haptic_interface)
         self.haptic_button.grid(row=2, column=0, padx=5, pady=5)
 
+        # HAND TRACKING
+        self.hand_button = tk.Button(self.tracking_frame, 
+                                     text='Hand Tracking',
+                                     font=('Arial', 16),
+                                     width=20,
+                                     height=2,
+                                     command=self.open_hand_tracking)
+        self.hand_button.grid(row=3, column=0, padx=5, pady=5)
+
     def open_artracking_interface(self):
         self.tracking_frame.pack_forget() # Apaga todas as configurações feitas nessa janela de main menu
         if (self.login == True):
@@ -67,5 +77,9 @@ class MainMenu():
     def open_haptic_interface(self):
         self.tracking_frame.pack_forget() # Apaga todas as configurações feitas nessa janela de main menu
         AppWithoutLogin(self.start_tracking_event, self.stop_tracking_event, self.window)
+
+    def open_hand_tracking(self):
+        dir = '../'
+        exec(open('../hands.py').read())
 
     # def showtip(self):

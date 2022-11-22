@@ -4,7 +4,7 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import LEFT, messagebox
 from tkinter.constants import ACTIVE, DISABLED
-from pil import ImageTk, Image
+from PIL import ImageTk, Image
 import socket
 import numpy as np
 from tracking import TrackingCofig

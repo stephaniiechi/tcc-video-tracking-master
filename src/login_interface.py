@@ -5,7 +5,7 @@ import json
 import requests
 import tkinter as tk
 from tkinter import LEFT
-from pil import ImageTk, Image
+from PIL import ImageTk, Image
 import webbrowser
 from app_with_login import AppWithLogin
 from main_menu import MainMenu
