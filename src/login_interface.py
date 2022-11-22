@@ -8,6 +8,7 @@ from tkinter import LEFT
 from pil import ImageTk, Image
 import webbrowser
 from app_with_login import AppWithLogin
+from main_menu import MainMenu
 
 FIREBASE_REST_API = "https://identitytoolkit.googleapis.com/v1/accounts"
 
@@ -186,7 +187,9 @@ class LoginInterface():
                     db.collection('users').document(userId).set(data)
 
                 self.login_frame.pack_forget()
-                AppWithLogin(self.start_tracking_event, self.stop_tracking_event, self.window, db, userId)
+                login_bool = True
+                MainMenu(self.start_tracking_event, self.stop_tracking_event, self.window, login_bool, db, userId)
+                # AppWithLogin(self.start_tracking_event, self.stop_tracking_event, self.window, db, userId)
             else:
                 self.error_message.configure(text='Unverified email.')
                 self.error_button.configure(command=lambda: self.send_email_verification_link(response))
@@ -225,7 +228,6 @@ class LoginInterface():
                     self.login_frame.pack()
         except:
             self.error_email_exists.grid(row=9, column=0)
-
 
     def change_to_register(self):
         self.login_frame.pack_forget()

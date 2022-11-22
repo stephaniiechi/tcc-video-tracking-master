@@ -24,12 +24,14 @@ if __name__ == "__main__":
     config = ET.parse('config.xml')
     login_option = config.getroot()
     value = login_option.attrib['value']
+    no_login = None
+    login_bool = False
 
     if value.lower() == "true":
         LoginInterface(start_tracking_event, stop_tracking_event, tk_root) # Inside the class LoginInterface, it calls AppWithLogin
     else:
         # AppWithoutLogin(start_tracking_event, stop_tracking_event, tk_root)
-        MainMenu(start_tracking_event, stop_tracking_event, tk_root)
+        MainMenu(start_tracking_event, stop_tracking_event, tk_root, login_bool, no_login, no_login)
 
     tk_root.mainloop()
 

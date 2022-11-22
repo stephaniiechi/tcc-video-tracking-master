@@ -1,12 +1,16 @@
 import tkinter as tk
 from pil import ImageTk, Image
 from app_without_login import AppWithoutLogin
+from app_with_login import AppWithLogin
 
 class MainMenu():
-    def __init__(self, start_tracking_event, stop_tracking_event, window):
+    def __init__(self, start_tracking_event, stop_tracking_event, window, login, db, userId):
         # para abrir o ar tracking
         self.start_tracking_event = start_tracking_event
         self.stop_tracking_event = stop_tracking_event
+        self.login = login
+        self.db = db
+        self.userId = userId
 
         # pegar algumas imagens/logos
         self.base_img_dir = '../images'
@@ -50,12 +54,15 @@ class MainMenu():
                                        font=('Arial', 16),
                                        width=20,
                                        height=2,
-                                       ommand=self.open_haptic_interface)
+                                       command=self.open_haptic_interface)
         self.haptic_button.grid(row=2, column=0, padx=5, pady=5)
 
     def open_artracking_interface(self):
         self.tracking_frame.pack_forget() # Apaga todas as configurações feitas nessa janela de main menu
-        AppWithoutLogin(self.start_tracking_event, self.stop_tracking_event, self.window)
+        if (self.login == True):
+            AppWithLogin(self.start_tracking_event, self.stop_tracking_event, self.window, self.db, self.userId)
+        else:
+            AppWithoutLogin(self.start_tracking_event, self.stop_tracking_event, self.window)
     
     def open_haptic_interface(self):
         self.tracking_frame.pack_forget() # Apaga todas as configurações feitas nessa janela de main menu
