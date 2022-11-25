@@ -2,6 +2,7 @@ import tkinter as tk
 from PIL import ImageTk, Image
 from app_without_login import AppWithoutLogin
 from app_with_login import AppWithLogin
+from hands import HandsTracking
 
 class MainMenu():
     def __init__(self, start_tracking_event, stop_tracking_event, window, login, db, userId):
@@ -79,7 +80,7 @@ class MainMenu():
         AppWithoutLogin(self.start_tracking_event, self.stop_tracking_event, self.window)
 
     def open_hand_tracking(self):
-        dir = '../'
-        exec(open('../hands.py').read())
+        ht = HandsTracking(9000)
+        ht.tracking()
 
     # def showtip(self):
