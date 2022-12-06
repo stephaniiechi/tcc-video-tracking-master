@@ -7,7 +7,6 @@ import tkinter as tk
 from tkinter import LEFT
 from PIL import ImageTk, Image
 import webbrowser
-from app_with_login import AppWithLogin
 from main_menu import MainMenu
 
 FIREBASE_REST_API = "https://identitytoolkit.googleapis.com/v1/accounts"
@@ -34,7 +33,7 @@ class LoginInterface():
         firebase=pyrebase.initialize_app(firebase_config)
         self.auth = firebase.auth()
 
-        self.window.title('AR Tracking Interface')
+        self.window.title('Login')
 
         width = 300
         height = 390
@@ -187,8 +186,9 @@ class LoginInterface():
                     db.collection('users').document(userId).set(data)
 
                 self.login_frame.pack_forget()
-                login_bool = True
-                MainMenu(self.start_tracking_event, self.stop_tracking_event, self.window, login_bool, db, userId)
+                self.login_frame.pack_forget()
+                self.menu_bar.destroy()
+                MainMenu(self.start_tracking_event, self.stop_tracking_event, self.window, True, db, userId)
                 # AppWithLogin(self.start_tracking_event, self.stop_tracking_event, self.window, db, userId)
             else:
                 self.error_message.configure(text='Unverified email.')
@@ -222,7 +222,8 @@ class LoginInterface():
 
                     self.login_frame.pack_forget()
                     self.register_frame.pack_forget()
-                    AppWithLogin(self.start_tracking_event, self.stop_tracking_event, self.window, db, userId)
+                    MainMenu(self.start_tracking_event, self.stop_tracking_event, self.window, True, db, userId)
+                    # AppWithLogin(self.start_tracking_event, self.stop_tracking_event, self.window, db, userId)
                 else:
                     self.register_frame.pack_forget()
                     self.login_frame.pack()
