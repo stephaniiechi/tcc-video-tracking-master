@@ -1,6 +1,62 @@
 import cv2
 import mediapipe as mp
 import socket
+import tkinter as tk
+
+class HandsInterface():
+    def __init__(self, start_tracking_event, stop_tracking_event, window, login, db, userId):
+        self.start_tracking_event = start_tracking_event
+        self.stop_tracking_event = stop_tracking_event
+        self.window = window
+        self.window.title('Hands Tracking')
+        self.login = login
+        self.db = db
+        self.userId = userId
+
+        width = 300
+        height = 130
+        pos_x = (window.winfo_screenwidth()/2) - (width/2)
+        pos_y = (window.winfo_screenheight()/2) - (height/2)
+        window.geometry('%dx%d+%d+%d' % (width, height, pos_x, pos_y))
+        window.resizable(0, 0)
+
+        # Create some room around all the internal frames
+        window['padx'] = 5
+        window['pady'] = 5
+
+        self.menu_bar = tk.Menu(self.window)
+        self.menu_bar.add_command(label='Back', command=self.back_to_menu)
+        self.window.config(menu=self.menu_bar)
+
+        self.main_frame = tk.Frame(self.window)
+        self.main_frame.pack()
+
+        self.socket_frame = tk.Frame(self.main_frame)
+        self.socket_frame.grid(row=0, column=0, padx=5, pady=5)
+        self.socket_entry_label = tk.Label(self.socket_frame, 
+                                           text='Port: ', 
+                                           font=('Arial', 11))
+        self.socket_entry_label.grid(row=0, column=0, padx=0, pady=5)
+        self.socket_entry = tk.Entry(self.socket_frame, width=25)
+        self.socket_entry.grid(row=0, column=1, padx=5, pady=5)
+
+        self.start_tracking_button = tk.Button(self.main_frame, 
+                                           text='Start Tracking',
+                                           font=('Arial', 12),
+                                           width=21,
+                                           height=1,
+                                           command=HandsTracking(socket=self.socket_entry.get()).tracking)
+        self.start_tracking_button.grid(row=1, column=0, padx=5, pady=5)
+
+    def back_to_menu(self):
+        from main_menu import MainMenu # Fazendo o import aqui pois são classes circulares
+        self.window.destroy()
+        if (self.login == True):
+            MainMenu(self.start_tracking_event, self.stop_tracking_event, tk.Tk(), True, self.db, self.userId)
+        else:
+            MainMenu(self.start_tracking_event, self.stop_tracking_event, tk.Tk(), False, None, None)
+
+
 
 class HandsTracking():
     def __init__(self, socket):
@@ -52,7 +108,7 @@ class HandsTracking():
                         #     str(rounded_z)).encode())
                         # s.close()
                         
-                        print(x_coordinate, y_coordinate, z_coordinate)
+                        # print(x_coordinate, y_coordinate, z_coordinate)
                         self.mp_drawing.draw_landmarks(
                             image,
                             hand_landmarks,
@@ -64,7 +120,7 @@ class HandsTracking():
                 window = cv2.imshow('Hand Tracking', cv2.flip(image, 1))
                 # win_x = screen_width/2 - window.cols/2
                 # win_y = screen_height/2 - image.rows/2 - 30
-                cv2.moveWindow(window, 700, 400)
+                # cv2.moveWindow(window, 700, 400)
                 
                 if cv2.waitKey(5) & 0xFF == 27: # Fechar pelo ESC
                     cv2.destroyWindow('Hand Tracking')

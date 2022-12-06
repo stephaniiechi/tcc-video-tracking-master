@@ -1,7 +1,7 @@
 import tkinter as tk
 from PIL import ImageTk, Image
 from ar_tracking import AppWithoutLogin, AppWithLogin
-from hands_tracking import HandsTracking
+from hands_tracking import HandsInterface
 
 class MainMenu():
     def __init__(self, start_tracking_event, stop_tracking_event, window, login, db, userId):
@@ -89,8 +89,10 @@ class MainMenu():
         AppWithoutLogin(self.start_tracking_event, self.stop_tracking_event, self.window)
 
     def open_hand_tracking(self):
-        ht = HandsTracking(9000)
-        ht.tracking()
+        self.main_frame.pack_forget()
+        HandsInterface(self.start_tracking_event, self.stop_tracking_event, self.window, self.login, self.db, self.userId)
+        # ht = HandsTracking(9000)
+        # ht.tracking()
 
     def exit_menu(self):
         if (self.login == True):
