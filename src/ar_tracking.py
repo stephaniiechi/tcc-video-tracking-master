@@ -785,11 +785,9 @@ class AppWithoutLogin():
         self.chessboard_square_size_entry.bind('<Return>', self.test_calibration)
 
     def test_calibration(self, event):
-        # ----- Comentado \/ só no app_without_login
         self.calibration = VideoSourceCalibration(self.get_calibration_dir(), self.video_source.current(), self.chessboard_square_size.get())
         self.save_camera_parameters()
         score = self.calibration.test()
-        # ----- Comentado /\
         if score != -1:
             result_window = tk.Toplevel()
             result_window.title("Test Result")

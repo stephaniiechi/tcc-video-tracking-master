@@ -173,8 +173,8 @@ class Tracking:
                 marker_rvec, marker_tvec = self.__get_rvec_and_tvec(
                     marker_position)
 
-                aruco.drawAxis(frame, cam_mtx, dist,
-                               marker_rvec, marker_tvec, 5)
+                # aruco.drawAxis(frame, cam_mtx, dist,
+                #                marker_rvec, marker_tvec, 5) # aruco has no attribute drawAxis
 
         return self.__detection_result(marker_rvec, marker_tvec, filter)
 
@@ -210,8 +210,8 @@ class Tracking:
                 main_marker_rvec, main_marker_tvec = self.__get_rvec_and_tvec(
                     choosen_marker_position)
 
-                aruco.drawAxis(frame, cam_mtx, dist,
-                            main_marker_rvec, main_marker_tvec, 5)
+                # aruco.drawAxis(frame, cam_mtx, dist,
+                #             main_marker_rvec, main_marker_tvec, 5) # aruco has no attribute drawAxis
 
         return self.__detection_result(main_marker_rvec, main_marker_tvec, filter)
 

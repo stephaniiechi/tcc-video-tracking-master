@@ -44,6 +44,7 @@ class MainMenu():
         self.artracking_button = tk.Button(self.main_frame, 
                                            text='AR Tracking',
                                            font=('Arial', 16),
+                                           activebackground='gray',
                                            width=20,
                                            height=2,
                                            command=self.open_artracking_interface)
@@ -53,6 +54,7 @@ class MainMenu():
         self.haptic_button = tk.Button(self.main_frame, 
                                        text='Seringa Háptica',
                                        font=('Arial', 16),
+                                       activebackground='gray',
                                        width=20,
                                        height=2,
                                        command=self.open_haptic_interface)
@@ -62,6 +64,7 @@ class MainMenu():
         self.hand_button = tk.Button(self.main_frame, 
                                      text='Hand Tracking',
                                      font=('Arial', 16),
+                                     activebackground='gray',
                                      width=20,
                                      height=2,
                                      command=self.open_hand_tracking)
@@ -70,7 +73,8 @@ class MainMenu():
         # EXIT
         self.exit_button = tk.Button(self.main_frame, 
                                      text='Exit',
-                                     background='red',
+                                     background='IndianRed3',
+                                     activebackground='indian red',
                                      font=('Arial', 14),
                                      width=22,
                                      height=1,
@@ -91,8 +95,6 @@ class MainMenu():
     def open_hand_tracking(self):
         self.main_frame.pack_forget()
         HandsInterface(self.start_tracking_event, self.stop_tracking_event, self.window, self.login, self.db, self.userId)
-        # ht = HandsTracking(9000)
-        # ht.tracking()
 
     def exit_menu(self):
         if (self.login == True):
