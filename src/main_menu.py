@@ -21,7 +21,8 @@ class MainMenu():
         self.window.title('Menu')
 
         width = 350
-        height = 380
+        height = 300
+        # height = 380 # quando a seringa háptica estiver pronta, utilizar essa medida
         pos_x = (window.winfo_screenwidth()/2) - (width/2)
         pos_y = (window.winfo_screenheight()/2) - (height/2)
         window.geometry('%dx%d+%d+%d' % (width, height, pos_x, pos_y))
@@ -50,15 +51,15 @@ class MainMenu():
                                            command=self.open_artracking_interface)
         self.artracking_button.grid(row=1, column=0, padx=5, pady=5)
 
-        # SERINGA HÁPTICA
-        self.haptic_button = tk.Button(self.main_frame, 
-                                       text='Seringa Háptica',
-                                       font=('Arial', 16),
-                                       activebackground='gray',
-                                       width=20,
-                                       height=2,
-                                       command=self.open_haptic_interface)
-        self.haptic_button.grid(row=2, column=0, padx=5, pady=5)
+        # SERINGA HÁPTICA # Quando a seringa háptica estiver pronta, descomentar essa parte \/
+        # self.haptic_button = tk.Button(self.main_frame, 
+        #                                text='Seringa Háptica',
+        #                                font=('Arial', 16),
+        #                                activebackground='gray',
+        #                                width=20,
+        #                                height=2,
+        #                                command=self.open_haptic_interface)
+        # self.haptic_button.grid(row=2, column=0, padx=5, pady=5)
 
         # HAND TRACKING
         self.hand_button = tk.Button(self.main_frame, 
@@ -88,9 +89,9 @@ class MainMenu():
         else:
             AppWithoutLogin(self.start_tracking_event, self.stop_tracking_event, self.window)
     
-    def open_haptic_interface(self):
-        self.main_frame.pack_forget() # Apaga todas as configurações feitas nessa janela de main menu
-        AppWithoutLogin(self.start_tracking_event, self.stop_tracking_event, self.window)
+    # def open_haptic_interface(self):
+    #     self.main_frame.pack_forget() # Apaga todas as configurações feitas nessa janela de main menu
+    #     AppWithoutLogin(self.start_tracking_event, self.stop_tracking_event, self.window) # Quando a seringa háptica estiver pronta, modificar essa parte aqui
 
     def open_hand_tracking(self):
         self.main_frame.pack_forget()
