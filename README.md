@@ -6,6 +6,7 @@ pip install -r requirements.txt
 
 python video_device_listing/setup.py install
 
+Para gerar o executável:
 pyinstaller --onefile -w -n ar-tracking -i icon.ico main.py
 
 
