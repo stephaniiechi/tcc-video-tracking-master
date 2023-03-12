@@ -107,20 +107,21 @@ class HandsTracking():
                                 hand_landmarks.landmark[self.mp_hands.HandLandmark.MIDDLE_FINGER_MCP].y
                             z_coordinate = hand_landmarks.landmark[self.mp_hands.HandLandmark.MIDDLE_FINGER_MCP].z
 
-                            # s = socket.socket()
-                            # HOST = socket.gethostname()
-                            # myIP = socket.gethostbyname(HOST)
-                            # s.connect((myIP, socket))
+                            # Envia os dados para a porta
+                            s = socket.socket()
+                            HOST = socket.gethostname()
+                            myIP = socket.gethostbyname(HOST)
+                            s.connect((myIP, socket))
                             
-                            # rounded_x = round(10000*round(x_coordinate, 2), 2)
-                            # rounded_y = round(10000*round(y_coordinate, 2), 2)
-                            # rounded_z = round(10000*round(z_coordinate, 2), 2)
+                            rounded_x = round(10000*round(x_coordinate, 2), 2)
+                            rounded_y = round(10000*round(y_coordinate, 2), 2)
+                            rounded_z = round(10000*round(z_coordinate, 2), 2)
                             
-                            # s.send((
-                            #     str(rounded_x) + "," +
-                            #     str(rounded_y) + "," +
-                            #     str(rounded_z)).encode())
-                            # s.close()
+                            s.send((
+                                str(rounded_x) + "," +
+                                str(rounded_y) + "," +
+                                str(rounded_z)).encode())
+                            s.close()
 
                             self.mp_drawing.draw_landmarks(
                                 image,
